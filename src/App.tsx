@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState, useRef } from 'react';
+import Editor from "@monaco-editor/react";
+
+import files from "./files";
 import './App.css';
 
-function App() {
+function App() {  
+  const editorRef = useRef(null);
+  
+  function handleEditorDidMount(editor, monaco) {
+    // get reference to editor instance
+    editorRef.current = editor;
+  }
+  
+  function handleSubmit() {
+    alert(editorRef.current.getValue());    
+  }
+
+  const [fileName, setFileName] = useState("Main.java");
+  const file = files[fileName];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App">      
+      <Editor
+        height="80vh"
+        theme="vs-dark"
+        path={file.name}
+        defaultLanguage={file.language}
+        defaultValue={file.value}
+      />
     </div>
   );
 }
